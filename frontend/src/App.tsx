@@ -20,10 +20,10 @@ function Layout() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <NavLink to="/" className="brand" aria-label="栈桥 OJ 首页">
+        <NavLink to="/" className="brand" aria-label="408 Local Judge 首页">
           <span className="brand-mark"><SquareTerminal size={21} strokeWidth={2.2} /></span>
           <span className="brand-copy">
-            <strong>栈桥 OJ</strong>
+            <strong>408 Local Judge</strong>
             <small>408 ALGORITHM LAB</small>
           </span>
         </NavLink>

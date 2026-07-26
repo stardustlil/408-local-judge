@@ -24,6 +24,9 @@
   --blue-soft: #eaf2fb;
   --orange: #b85724;
   --shadow: 0 12px 32px rgba(25, 45, 35, 0.08);
+  --motion-fast: 140ms;
+  --motion-base: 260ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -92,6 +95,7 @@ summary:focus-visible {
   padding: 22px 14px 16px;
   background: var(--surface);
   border-right: 1px solid var(--border);
+  box-shadow: 10px 0 28px rgba(25, 45, 35, 0.035);
 }
 
 .brand {
@@ -113,6 +117,7 @@ summary:focus-visible {
   background: var(--green);
   border-radius: 7px;
   box-shadow: 0 5px 14px rgba(22, 119, 90, 0.2);
+  transition: transform var(--motion-base) var(--ease-out), box-shadow var(--motion-base) ease;
 }
 
 .brand-copy {
@@ -140,6 +145,7 @@ summary:focus-visible {
 }
 
 .primary-nav a {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: 42px;
@@ -149,6 +155,21 @@ summary:focus-visible {
   gap: 11px;
   font-size: 14px;
   font-weight: 600;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+}
+
+.primary-nav a::before {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  width: 3px;
+  background: var(--green);
+  border-radius: 0 3px 3px 0;
+  content: "";
+  opacity: 0;
+  transform: scaleY(0.45);
+  transition: opacity var(--motion-fast) ease, transform var(--motion-base) var(--ease-out);
 }
 
 .primary-nav a:hover {
@@ -159,6 +180,11 @@ summary:focus-visible {
 .primary-nav a.active {
   color: var(--green-dark);
   background: var(--green-soft);
+}
+
+.primary-nav a.active::before {
+  opacity: 1;
+  transform: scaleY(1);
 }
 
 .sidebar-foot {
@@ -179,6 +205,7 @@ summary:focus-visible {
   background: #1f9c72;
   border: 2px solid #d8f3e8;
   border-radius: 50%;
+  animation: status-online 420ms 220ms var(--ease-out) backwards;
 }
 
 .main-content {
@@ -189,6 +216,7 @@ summary:focus-visible {
   width: min(100%, 1320px);
   margin: 0 auto;
   padding: 42px 44px 64px;
+  animation: page-in var(--motion-base) var(--ease-out) backwards;
 }
 
 .page-header {
@@ -233,7 +261,9 @@ summary:focus-visible {
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease, box-shadow var(--motion-fast) ease,
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .button:disabled,
@@ -246,6 +276,7 @@ summary:focus-visible {
   color: #fff;
   background: var(--green);
   border-color: var(--green);
+  box-shadow: 0 5px 14px rgba(22, 119, 90, 0.16);
 }
 
 .button.primary:hover:not(:disabled) {
@@ -267,6 +298,10 @@ summary:focus-visible {
 .button.danger {
   color: #fff;
   background: var(--red);
+}
+
+.button.danger:hover:not(:disabled) {
+  background: #a9342e;
 }
 
 .button.dashed {
@@ -293,6 +328,8 @@ summary:focus-visible {
   border: 1px solid transparent;
   border-radius: 5px;
   cursor: pointer;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
 }
 
 .icon-button:hover {
@@ -323,7 +360,12 @@ summary:focus-visible {
   padding: 19px 24px;
   border-right: 1px solid var(--border);
   gap: 7px;
+  animation: stat-in 360ms var(--ease-out) backwards;
 }
+
+.stats-strip > div:nth-child(2) { animation-delay: 35ms; }
+.stats-strip > div:nth-child(3) { animation-delay: 70ms; }
+.stats-strip > div:nth-child(4) { animation-delay: 105ms; }
 
 .stats-strip > div:last-child {
   border-right: 0;
@@ -369,6 +411,8 @@ summary:focus-visible {
   border: 1px solid var(--border);
   border-radius: 6px;
   gap: 9px;
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
 }
 
 .search-field:focus-within {
@@ -407,6 +451,7 @@ summary:focus-visible {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 7px;
+  box-shadow: 0 2px 7px rgba(25, 45, 35, 0.035);
 }
 
 .data-table {
@@ -441,6 +486,17 @@ summary:focus-visible {
 .data-table tbody tr:hover {
   background: #fbfcfb;
 }
+
+.data-table tbody tr {
+  animation: row-in 220ms var(--ease-out) backwards;
+  transition: background-color var(--motion-fast) ease;
+}
+
+.data-table tbody tr:nth-child(2) { animation-delay: 20ms; }
+.data-table tbody tr:nth-child(3) { animation-delay: 40ms; }
+.data-table tbody tr:nth-child(4) { animation-delay: 60ms; }
+.data-table tbody tr:nth-child(5) { animation-delay: 80ms; }
+.data-table tbody tr:nth-child(6) { animation-delay: 100ms; }
 
 .problem-table th:first-child,
 .problem-table td:first-child {
@@ -493,6 +549,8 @@ summary:focus-visible {
   border-radius: 4px;
   font-size: 11px;
   white-space: nowrap;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease,
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .tag.removable {
@@ -565,6 +623,8 @@ summary:focus-visible {
   border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease,
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .tag-filter span {
@@ -624,10 +684,61 @@ summary:focus-visible {
   to { transform: rotate(360deg); }
 }
 
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stat-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes surface-in {
+  from { opacity: 0; transform: translateY(5px) scale(0.997); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes result-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes status-pop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tab-line-in {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(7px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes status-online {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 /* Practice workspace */
 .problem-page {
   min-height: 100vh;
   padding: 0 24px 32px;
+  animation: page-in var(--motion-base) var(--ease-out) backwards;
 }
 
 .problem-topbar {
@@ -690,6 +801,8 @@ summary:focus-visible {
   border: 1px solid var(--border);
   border-radius: 7px;
   box-shadow: var(--shadow);
+  animation: surface-in 320ms 45ms var(--ease-out) backwards;
+  transition: box-shadow var(--motion-base) ease, border-color var(--motion-base) ease;
 }
 
 .statement-pane,
@@ -979,6 +1092,8 @@ summary:focus-visible {
   gap: 6px;
   font-size: 11px;
   font-weight: 700;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
 }
 
 .segmented-control button.active {
@@ -994,6 +1109,7 @@ summary:focus-visible {
 
 .code-editor .cm-editor {
   font-size: 13px;
+  transition: box-shadow var(--motion-fast) ease;
 }
 
 .code-editor .cm-scroller {
@@ -1014,6 +1130,7 @@ summary:focus-visible {
 
 .code-editor .cm-focused {
   outline: none;
+  box-shadow: inset 0 0 0 1px rgba(22, 119, 90, 0.2);
 }
 
 .editor-actions {
@@ -1082,6 +1199,8 @@ summary:focus-visible {
   left: 0;
   height: 2px;
   background: var(--green);
+  transform-origin: left;
+  animation: tab-line-in var(--motion-fast) var(--ease-out) backwards;
 }
 
 .result-placeholder {
@@ -1110,6 +1229,7 @@ summary:focus-visible {
 
 .judge-result {
   padding: 16px;
+  animation: result-in 220ms var(--ease-out) backwards;
 }
 
 .result-summary {
@@ -1120,6 +1240,10 @@ summary:focus-visible {
   color: var(--faint);
   gap: 8px 15px;
   font-size: 11px;
+}
+
+.result-summary .status-badge {
+  animation: status-pop 220ms var(--ease-out) backwards;
 }
 
 .result-summary > span:not(.status-badge) {
@@ -1219,7 +1343,16 @@ summary:focus-visible {
   border: 1px solid var(--border);
   border-radius: 5px;
   column-gap: 6px;
+  animation: result-in 200ms var(--ease-out) backwards;
 }
+
+.case-item:nth-child(2) { animation-delay: 20ms; }
+.case-item:nth-child(3) { animation-delay: 40ms; }
+.case-item:nth-child(4) { animation-delay: 60ms; }
+.case-item:nth-child(5) { animation-delay: 80ms; }
+.case-item:nth-child(6) { animation-delay: 100ms; }
+.case-item:nth-child(7) { animation-delay: 120ms; }
+.case-item:nth-child(8) { animation-delay: 140ms; }
 
 .case-item.accepted { border-left: 3px solid var(--green); }
 .case-item.wrong,
@@ -1684,6 +1817,8 @@ summary:focus-visible {
   border-radius: 5px;
   cursor: pointer;
   gap: 10px;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
 }
 
 .file-drop:hover,
@@ -1784,6 +1919,10 @@ summary:focus-visible {
   grid-template-columns: 1fr 1fr;
   padding: 0 10px 12px 46px;
   gap: 8px;
+}
+
+.test-case-item[open] .test-preview-grid {
+  animation: result-in 180ms var(--ease-out) backwards;
 }
 
 .test-preview-grid > div {
@@ -1906,6 +2045,7 @@ summary:focus-visible {
   border-bottom: 1px solid var(--border);
   border-left: 4px solid var(--border-strong);
   gap: 14px;
+  animation: surface-in var(--motion-base) var(--ease-out) backwards;
 }
 
 .submission-verdict.accepted { border-left-color: var(--green); }
@@ -2027,6 +2167,7 @@ summary:focus-visible {
   justify-content: center;
   padding: 20px;
   background: rgba(16, 28, 22, 0.42);
+  animation: backdrop-in 160ms ease backwards;
 }
 
 .dialog {
@@ -2037,6 +2178,7 @@ summary:focus-visible {
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 24px 70px rgba(10, 26, 18, 0.2);
+  animation: dialog-in 210ms var(--ease-out) backwards;
 }
 
 .dialog-close {
@@ -2073,6 +2215,48 @@ summary:focus-visible {
   justify-content: flex-end;
   margin-top: 24px;
   gap: 8px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand:hover .brand-mark {
+    transform: translateY(-1px) scale(1.025);
+    box-shadow: 0 8px 19px rgba(22, 119, 90, 0.24);
+  }
+
+  .primary-nav a:hover,
+  .tag-filter:hover {
+    transform: translateX(2px);
+  }
+
+  .button:hover:not(:disabled),
+  .icon-button:hover:not(:disabled),
+  .segmented-control button:hover,
+  .file-drop:hover,
+  .tag:hover {
+    transform: translateY(-1px);
+  }
+
+  .button:active:not(:disabled),
+  .icon-button:active:not(:disabled),
+  .segmented-control button:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .data-table tbody tr:hover .row-action {
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (max-width: 1180px) {

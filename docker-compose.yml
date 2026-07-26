@@ -1,4 +1,4 @@
-name: local-408-oj
+name: 408-local-judge
 
 services:
   db:

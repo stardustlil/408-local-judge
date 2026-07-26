@@ -1,6 +1,6 @@
-# 栈桥 OJ：本地 408 数据结构刷题平台
+# 408 Local Judge：本地 408 数据结构刷题平台
 
-一个面向个人学习的本地 Online Judge。支持题目与测试点管理、C/C++ 在线编辑、提交历史，以及使用 Docker 一次性沙箱完成编译和逐测试点判题。
+408 Local Judge 是一个面向个人学习的本地 Online Judge。支持题目与测试点管理、C/C++ 在线编辑、提交历史，以及使用 Docker 一次性沙箱完成编译和逐测试点判题。
 
 ## 启动
 
@@ -36,7 +36,7 @@ PostgreSQL 数据保存在 Docker 卷 `local-408-oj-data`。只有执行 `docker
 - 题目：创建、编辑、删除、搜索、标签分类，配置题面、样例、时间与内存限制。
 - 题面：使用单一 Markdown 文档，支持 GFM 表格、任务列表、代码块和 KaTeX 数学公式，并提供实时预览。
 - 测试点：在线输入或成对上传 UTF-8 input/output 文件，一题支持任意多个测试点。
-- 编辑器：C 17 / C++ 17 语法高亮、行号、自动缩进、括号匹配和本地草稿。
+- 编辑器：C 17 / C++ 17 语法高亮、行号、4 空格自动缩进、括号匹配和本地草稿。
 - 判题：Accepted、Wrong Answer、Compile Error、Runtime Error、Time Limit Exceeded、Memory Limit Exceeded。
 - 记录：保存每次源码、编译信息、最长用时和逐测试点结果。
 
@@ -69,6 +69,8 @@ docker compose exec api python -m app.import_questions --prune-stale
 
 2026 年考试目前没有可用于逐题核验的公开原卷，公开回忆版之间仍有题面和分值冲突，因此没有以 `【真题（2026）】` 导入。这样可以避免把未经核实的回忆内容标成准确真题。
 
+题库定义、固定随机种子和标准答案生成器均保存在 `backend/app/question_bank.py`，因此公开仓库本身即可在空数据库中重建全部 17 道 408 代码题和 188 个测试点，不依赖本机数据库导出。Docker 卷中的个人提交记录、代码草稿和其他运行数据不会进入 Git 仓库。
+
 ## 服务结构
 
 ```text
@@ -95,7 +97,7 @@ Browser :3000
 - 只读根文件系统，仅提供有大小上限的临时目录；
 - 非 root 用户、`cap-drop ALL`、`no-new-privileges`；
 - Docker cgroup 内存/CPU 限制、进程数限制和文件描述符限制；
-- CPU/墙钟超时和 2 MB 输出限制；
+- CPU/墙钟超时和 8 MB 输出限制；
 - 判题结束后强制删除一次性容器。
 
 这是适合个人本地学习的隔离方案。Docker socket 本身拥有较高权限，因此不要向不受信任的网络暴露 API 或 worker；默认部署只面向本机端口。
@@ -103,3 +105,7 @@ Browser :3000
 ## API
 
 FastAPI 文档位于 [http://localhost:8000/docs](http://localhost:8000/docs)，健康检查为 `GET /api/health`。前端通过 Nginx 的 `/api` 反向代理访问后端。
+
+## 许可证
+
+程序代码采用 [MIT License](LICENSE)。408 历年试题及其题面材料的相关权利归原权利方所有，题库内容仅用于个人学习与研究，不包含在 MIT 软件许可授权范围内。

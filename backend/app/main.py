@@ -35,7 +35,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="408 Local OJ API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="408 Local Judge API", version="1.0.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost", "http://localhost:3000", "http://localhost:5173"],

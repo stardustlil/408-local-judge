@@ -1,5 +1,9 @@
-import CodeMirror from "@uiw/react-codemirror";
+import { indentWithTab } from "@codemirror/commands";
 import { cpp } from "@codemirror/lang-cpp";
+import { indentUnit } from "@codemirror/language";
+import { EditorState } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
+import CodeMirror from "@uiw/react-codemirror";
 
 type CodeEditorProps = {
   value: string;
@@ -13,7 +17,12 @@ export function CodeEditor({ value, onChange, readOnly = false, minHeight = "520
     <CodeMirror
       value={value}
       height={minHeight}
-      extensions={[cpp()]}
+      extensions={[
+        cpp(),
+        EditorState.tabSize.of(4),
+        indentUnit.of("    "),
+        keymap.of([indentWithTab]),
+      ]}
       onChange={onChange}
       readOnly={readOnly}
       basicSetup={{
@@ -31,4 +40,3 @@ export function CodeEditor({ value, onChange, readOnly = false, minHeight = "520
     />
   );
 }
-

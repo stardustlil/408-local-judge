@@ -45,7 +45,7 @@ function ResultPanel({ submission }: { submission: Submission | undefined }) {
   }
   const pending = submission.status === "Queued" || submission.status === "Judging";
   return (
-    <div className="judge-result">
+    <div className="judge-result" key={`${submission.id}-${submission.status}`}>
       <div className="result-summary">
         <StatusBadge status={submission.status} />
         {!pending && submission.runtime_ms !== null && <span><Clock3 size={15} /> 最长 {submission.runtime_ms} ms</span>}
