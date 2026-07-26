@@ -1,0 +1,95 @@
+name: local-408-oj
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-oj}
+      POSTGRES_USER: ${POSTGRES_USER:-oj}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-oj-local-password}
+    volumes:
+      - oj_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  runner-base:
+    image: local-oj-runner:latest
+    build:
+      context: ./runner
+    command: ["sleep", "infinity"]
+    network_mode: none
+    read_only: true
+    tmpfs:
+      - /workspace:size=1m,uid=10001,gid=10001
+    healthcheck:
+      test: ["CMD", "true"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+    restart: unless-stopped
+
+  api:
+    image: local-oj-backend:latest
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-oj}:${POSTGRES_PASSWORD:-oj-local-password}@db:5432/${POSTGRES_DB:-oj}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      IMPORT_408_QUESTIONS: ${IMPORT_408_QUESTIONS:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  worker:
+    image: local-oj-backend:latest
+    pull_policy: never
+    command: ["python", "-m", "app.worker"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-oj}:${POSTGRES_PASSWORD:-oj-local-password}@db:5432/${POSTGRES_DB:-oj}
+      JUDGE_IMAGE: local-oj-runner:latest
+      JUDGE_POLL_INTERVAL: ${JUDGE_POLL_INTERVAL:-0.8}
+    depends_on:
+      api:
+        condition: service_healthy
+      runner-base:
+        condition: service_healthy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,exec
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${OJ_PORT:-3000}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    restart: unless-stopped
+
+volumes:
+  oj_postgres_data:
+    name: local-408-oj-data
