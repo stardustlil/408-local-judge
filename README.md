@@ -1,5 +1,7 @@
 # 408 Local Judge：本地 408 数据结构刷题平台
 
+[![CI](https://github.com/stardustlil/408-local-judge/actions/workflows/ci.yml/badge.svg)](https://github.com/stardustlil/408-local-judge/actions/workflows/ci.yml)
+
 408 Local Judge 是一个面向个人学习的本地 Online Judge。支持题目与测试点管理、C/C++ 在线编辑、提交历史，以及使用 Docker 一次性沙箱完成编译和逐测试点判题。
 
 ## 启动
@@ -105,6 +107,10 @@ Browser :3000
 ## API
 
 FastAPI 文档位于 [http://localhost:8000/docs](http://localhost:8000/docs)，健康检查为 `GET /api/health`。前端通过 Nginx 的 `/api` 反向代理访问后端。
+
+## 持续集成
+
+GitHub Actions 会在推送到 `main`、创建 Pull Request 或手动触发时运行后端测试、前端生产构建和完整 Docker 冒烟测试。冒烟测试使用临时数据库核对 17 道 408 真题与 188 个测试点，并分别验证 C/C++ 提交能够通过沙箱判题；工作流结束后会删除 CI 容器和数据卷。
 
 ## 许可证
 
