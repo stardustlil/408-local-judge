@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from .models import Problem, TestCase
 from .question_bank import SOURCE_PREFIX, QuestionBankProblem, build_question_bank
+from .wangdao_mock_bank import build_wangdao_mock_bank
 
 
 SOURCE_PATTERN = re.compile(rf"<!-- {re.escape(SOURCE_PREFIX)}([^;]+);version:\d+ -->")
@@ -87,7 +88,7 @@ def import_question_bank(db: Session, *, prune_stale: bool = False) -> ImportSum
             raise ValueError(f"数据库中存在重复的 408 题库来源标识：{key}")
         by_key[key] = problem
 
-    specs = build_question_bank()
+    specs = (*build_question_bank(), *build_wangdao_mock_bank())
     active_keys = {spec.key for spec in specs}
     stale = [problem for key, problem in by_key.items() if key not in active_keys]
 

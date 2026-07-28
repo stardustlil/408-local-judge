@@ -66,15 +66,15 @@ def test_import_is_idempotent_and_preserves_custom_problems():
         db.commit()
 
         first = import_question_bank(db)
-        assert first.created == 17
+        assert first.created == 25
         assert first.updated == 0
         assert first.unchanged == 0
-        assert first.test_cases == 188
+        assert first.test_cases == 302
 
         second = import_question_bank(db)
         assert second.created == 0
         assert second.updated == 0
-        assert second.unchanged == 17
+        assert second.unchanged == 25
 
         stale = Problem(
             title="已经退出目录的受管题目",
@@ -106,7 +106,7 @@ def test_import_is_idempotent_and_preserves_custom_problems():
         repaired = import_question_bank(db)
         assert repaired.created == 0
         assert repaired.updated == 1
-        assert repaired.unchanged == 16
+        assert repaired.unchanged == 24
         assert imported.title.startswith("408-2009")
         assert imported.test_cases[0].output_data != "corrupt\n"
 
