@@ -10,13 +10,15 @@ type CodeEditorProps = {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   minHeight?: string;
+  fontSize?: number;
 };
 
-export function CodeEditor({ value, onChange, readOnly = false, minHeight = "520px" }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, readOnly = false, minHeight = "520px", fontSize = 13 }: CodeEditorProps) {
   return (
     <CodeMirror
       value={value}
       height={minHeight}
+      style={{ fontSize: `${fontSize}px` }}
       extensions={[
         cpp(),
         EditorState.tabSize.of(4),

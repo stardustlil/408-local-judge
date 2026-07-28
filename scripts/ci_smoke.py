@@ -92,12 +92,13 @@ def main() -> None:
     verify_frontend()
 
     stats = request_json("/stats")
-    assert stats["problem_count"] == 17, stats
+    assert stats["problem_count"] == 25, stats
     assert stats["tag_counts"].get("408真题") == 17, stats
+    assert stats["tag_counts"].get("王道模拟题") == 8, stats
 
     problems = request_json("/problems")
-    assert len(problems) == 17, problems
-    assert sum(problem["test_case_count"] for problem in problems) == 188, problems
+    assert len(problems) == 25, problems
+    assert sum(problem["test_case_count"] for problem in problems) == 302, problems
 
     smoke_problem = request_json(
         "/problems",
@@ -114,7 +115,7 @@ def main() -> None:
 
     verify_solution(smoke_problem["id"], "cpp", CPP_SOLUTION)
     verify_solution(smoke_problem["id"], "c", C_SOLUTION)
-    print("Docker smoke test passed: 17 problems, 188 cases, C/C++ judge accepted")
+    print("Docker smoke test passed: 25 problems, 302 cases, C/C++ judge accepted")
 
 
 if __name__ == "__main__":
